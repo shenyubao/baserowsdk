@@ -71,9 +71,13 @@ class Client:
 if __name__ == "__main__":
     client = Client(api_key="...", base_url="http://192.168.40.220")
     # 获取字段
-    fields = client.fields(182)
-    print(fields)
-    
+    # fields = client.fields(182)
+    # print(fields)
+
+    # Search
+    filters = {"filter_type":"AND","filters":[{"type":"equal","field":"名称","value":"nl2sql_dataset_v2_1106"}],"groups":[]}
+    rows = client.base(39).table(316).select(fields=["名称"],page_size=100,formula=filters)
+    print(rows)
     # 单条查询
     #
     # row = client.row(table_id=182, row_id=1)

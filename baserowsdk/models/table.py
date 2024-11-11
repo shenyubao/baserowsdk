@@ -1,6 +1,8 @@
 from typing import List
 from baserowsdk.models.row import Row, RowList
 import requests
+import json
+import urllib.parse
 
 class Table:
     """表示一个 Table 的类"""
@@ -175,7 +177,8 @@ class Table:
             params['order_by'] = order_by
             
         if filters:
-            params['filters'] = filters
+            filters_json = json.dumps(filters)
+            params['filters'] = filters_json
             
         if filter_type and filter_type.upper() in ['AND', 'OR']:
             params['filter_type'] = filter_type.upper()
