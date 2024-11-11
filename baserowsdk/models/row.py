@@ -1,9 +1,13 @@
 from typing import List, Optional, Dict, Any
+from functools import lru_cache
+import time
 
 class Row:
     """表示单行数据的类,类似 Airtable Record"""
     def __init__(self, data: dict):
         self._data = data
+        self._cache = {}
+        self._cache_times = {}
         for key, value in data.items():
             setattr(self, key, value)
     
@@ -12,9 +16,29 @@ class Row:
         """返回行的所有字段数据"""
         return self._data
     
-    def get(self, field: str, default=None):
-        """获取指定字段的值"""
-        return self._data.get(field, default)
+    def get(self, field: str, default=None, cache_minutes: int = 5):
+        """
+        获取指定字段的值，支持本地缓存
+        
+        Args:
+            field: 字段名
+            default: 默认值
+            cache_minutes: 缓存时间(分钟)，默认5分钟
+        """
+        current_time = time.time()
+        
+        # 检查缓存是否存在且未过期
+        if field in self._cache:
+            cache_time = self._cache_times.get(field, 0)
+            if current_time - cache_time < cache_minutes * 60:
+                return self._cache[field]
+        
+        # 获取新值并更新缓存
+        value = self._data.get(field, default)
+        self._cache[field] = value
+        self._cache_times[field] = current_time
+        
+        return value
         
     def __getattr__(self, name):
         """允许通过属性方式访问字段"""

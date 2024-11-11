@@ -51,16 +51,31 @@ class Client:
         url = self._get_full_url(endpoint)
         
         response = requests.get(url, headers=self.headers)
-        response.raise_for_status()        
-        return [Field(**field) for field in response.json()]
+        response.raise_for_status()
+        
+        # 只提取我们需要的字段
+        fields_data = []
+        for field in response.json():
+            required_fields = {
+                'id': field['id'],
+                'table_id': field['table_id'],
+                'name': field['name'],
+                'order': field['order'],
+                'type': field['type'],
+                'primary': field['primary']
+            }
+            fields_data.append(Field(**required_fields))
+        
+        return fields_data
 
 if __name__ == "__main__":
     client = Client(api_key="...", base_url="http://192.168.40.220")
     # 获取字段
-    # fields = client.fields(182)
-    # print(fields)
+    fields = client.fields(182)
+    print(fields)
     
     # 单条查询
+    #
     # row = client.row(table_id=182, row_id=1)
     # print(row)
 

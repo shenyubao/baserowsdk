@@ -129,7 +129,7 @@ class Table:
         )
         response.raise_for_status()
         
-    def row(self, row_id: int, user_field_names: bool = False) -> dict:
+    def row(self, row_id: int, user_field_names: bool = True) -> dict:
         """获取指定表中的单行数据"""
         endpoint = f"api/database/rows/table/{self.table_id}/{row_id}/"
         url = self.client._get_full_url(endpoint)

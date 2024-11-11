@@ -33,11 +33,11 @@ print(fields)
 ### 查询数据
 ```python
 # 单条查询
-row = client.row(table_id=182, row_id=1)
+base = client.base(39)
+row = base.table(182).row(row_id=1)
 print(row)
 
 # 批量查询
-base = client.base(39)
 rows = base.table(182).select(page_size=100)
 print(rows)
 ```
@@ -46,7 +46,7 @@ print(rows)
 ```python
 # 创建新记录
 row = client.base(39).table(182).create(
-    fields={"执行批次ID": "1234567890"}
+    fields={"黑话改写_输入": "1234567890","黑话改写_输出": "1234567890"}
 )
 print(row)
 ```
