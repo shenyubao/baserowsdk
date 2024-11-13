@@ -70,8 +70,7 @@ class Client:
 
 if __name__ == "__main__":
 
-    # client = Client(api_key="...", base_url="http://192.168.40.220")
-    client = Client(api_key="Zfsk1r7M7FyMw9qRjAZcPxkTLVy3x8U7", base_url="https://aiadmin.yucekj.com")
+    client = Client(api_key="...", base_url="http://192.168.40.220")
     filter2 = {"filter_type":"AND","filters":[{"type":"link_row_has","field":"测试用例集","value":"5"}],"groups":[]}
     rows = client.base(39).table(171).select(100,1,formula=filter2)
     for row in rows:
