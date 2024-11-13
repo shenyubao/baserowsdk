@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "baserowsdk"
-version = "0.0.6"
+version = "0.0.7"
 description = "Baserow OpenAPI Python SDK"
 authors = ["shenyubao. <ssybb1988@gmail.com>"]
 readme = "README.md"

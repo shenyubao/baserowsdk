@@ -1,5 +1,6 @@
 from typing import List
 from baserowsdk.models.row import Row, RowList
+from baserowsdk.sdk_exception import SdkException
 import requests
 import json
 import urllib.parse
@@ -75,7 +76,8 @@ class Table:
             params=params,
             json=fields
         )
-        response.raise_for_status()
+        if response.status_code >=400:
+            raise SdkException(response)
         return Row(response.json())
         
     def update(
@@ -110,7 +112,8 @@ class Table:
             params=params,
             json=fields
         )
-        response.raise_for_status()
+        if response.status_code >=400:
+            raise SdkException(response)
         return Row(response.json())
         
     def delete(self, row_id: int) -> None:
@@ -141,7 +144,8 @@ class Table:
             params['user_field_names'] = 'true'
             
         response = requests.get(url, headers=self.client.headers, params=params)
-        response.raise_for_status()
+        if response.status_code >=400:
+            raise SdkException(response)
         return response.json()
 
     def rows(
@@ -198,5 +202,6 @@ class Table:
         })
         
         response = requests.get(url, headers=self.client.headers, params=params)
-        response.raise_for_status()
+        if response.status_code >=400:
+            raise SdkException(response)
         return RowList(response.json()) 

@@ -69,15 +69,22 @@ class Client:
         return fields_data
 
 if __name__ == "__main__":
-    client = Client(api_key="...", base_url="http://192.168.40.220")
+
+    # client = Client(api_key="...", base_url="http://192.168.40.220")
+    client = Client(api_key="Zfsk1r7M7FyMw9qRjAZcPxkTLVy3x8U7", base_url="https://aiadmin.yucekj.com")
+    filter2 = {"filter_type":"AND","filters":[{"type":"link_row_has","field":"测试用例集","value":"5"}],"groups":[]}
+    rows = client.base(39).table(171).select(100,1,formula=filter2)
+    for row in rows:
+        print(row.get("评价GT_仅数字"))
+
     # 获取字段
     # fields = client.fields(182)
     # print(fields)
 
     # Search
-    filters = {"filter_type":"AND","filters":[{"type":"equal","field":"名称","value":"nl2sql_dataset_v2_1106"}],"groups":[]}
-    rows = client.base(39).table(316).select(fields=["名称"],page_size=100,formula=filters)
-    print(rows)
+    # filters = {"filter_type":"AND","filters":[{"type":"equal","field":"名称","value":"nl2sql_dataset_v2_1106"}],"groups":[]}
+    # rows = client.base(39).table(316).select(fields=["名称"],page_size=100,formula=filters)
+    # print(rows)
     # 单条查询
     #
     # row = client.row(table_id=182, row_id=1)
