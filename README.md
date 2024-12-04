@@ -43,6 +43,7 @@ print(rows)
 
 # 查询同时种缓存
 # 注意: 缓存是基于 client 对象的, 不同 client 对象之间互不干扰
+# 注意: 缓存 Key 为 select 的所有查询条件进行 Hash, 仅查询条件完全相同才会命中缓存
 rows = base.table(182).select(page_size=100, cache_senconds=10)
 print(rows)
 ```
