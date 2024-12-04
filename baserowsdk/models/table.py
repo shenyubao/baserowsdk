@@ -4,6 +4,7 @@ from baserowsdk.sdk_exception import SdkException
 import requests
 import json
 import urllib.parse
+import time
 
 class Table:
     """表示一个 Table 的类"""
@@ -21,9 +22,19 @@ class Table:
         formula: str = None,
         view: str = None,
         max_records: int = None,
+        cache_senconds: int = None,
         **kwargs
     ) -> RowList:
         """查询表中的记录"""
+        # 清理过期的缓存
+        if cache_senconds:
+            current_time = time.time()
+            expired_keys = [key for key, value in self.client.cache.items() 
+                            if current_time - value['timestamp'] >= cache_senconds]
+            for key in expired_keys:
+                print(f"cache expired: {key}")
+                del self.client.cache[key]
+        
         params = {
             'size': page_size
         }
@@ -39,11 +50,28 @@ class Table:
         if view:
             params['view_id'] = view
             
-        return self.rows(**params)
+        # 添加缓存逻辑
+        cache_key = f"select_cache_{self.base_id}_{self.table_id}_{hash(str(sorted(params.items())))}"
+
+        if cache_key in self.client.cache:
+            # print(f"cache hit: {cache_key}")
+            return self.client.cache[cache_key]['data']
         
-    def get(self, record_id: str) -> Row:
+        # 进行 API 请求
+        response = self.rows(**params)
+        
+        # 更新缓存
+        if cache_senconds:
+            self.client.cache[cache_key] = {
+                'data': response,
+                'timestamp': time.time()
+            }
+        
+        return response
+        
+    def get(self, record_id: str, user_field_names: bool = True) -> Row:
         """获取单条记录"""
-        return self.row(self.table_name, record_id)
+        return self.row(record_id, user_field_names)
         
     def create(
         self, 

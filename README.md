@@ -40,6 +40,11 @@ print(row)
 # 批量查询
 rows = base.table(182).select(page_size=100)
 print(rows)
+
+# 查询同时种缓存
+# 注意: 缓存是基于 client 对象的, 不同 client 对象之间互不干扰
+rows = base.table(182).select(page_size=100, cache_senconds=10)
+print(rows)
 ```
 
 ### 创建数据
